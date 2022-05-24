@@ -1,3 +1,5 @@
+import 'package:dusyeriinstagram/locator.dart';
+import 'package:dusyeriinstagram/services/account.service.dart';
 import 'package:flutter/material.dart';
 
 class SetProfile extends StatefulWidget {
@@ -8,12 +10,16 @@ class SetProfile extends StatefulWidget {
 }
 
 class _SetProfileState extends State<SetProfile> {
+  final accountService = locator<AccountService>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.white,
-          leading: InkWell(onTap: (){Navigator.pop(context);},
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
             child: const Icon(
               Icons.arrow_back_ios_new,
               color: Colors.black,
@@ -25,11 +31,14 @@ class _SetProfileState extends State<SetProfile> {
             style: TextStyle(color: Colors.black, fontSize: 18),
           ),
           elevation: 0.5,
-          actions:  [
-          IconButton(onPressed: (){}, icon:   const Icon(
-              Icons.check,
-              color: Colors.blue,
-            ),),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.check,
+                color: Colors.blue,
+              ),
+            ),
             const SizedBox(
               width: 5,
             )
@@ -37,21 +46,35 @@ class _SetProfileState extends State<SetProfile> {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(15, 50, 15, 15),
         child: SingleChildScrollView(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                CircleAvatar(
-                  maxRadius: 50,backgroundImage: NetworkImage( 'https://guardian.ng/wp-content/uploads/2017/10/698669.jpg'),
-                ),SizedBox(height: 20,),
-                Text(
-                  'Profil Fotoğrafını Değiştir',
-                  style: TextStyle(fontSize: 18, color: Colors.blue),
-                ),SizedBox(height: 40,),
-                TextField(
-                  decoration: InputDecoration(hintText: 'Kullanıcı adı',labelText: 'Kullanıcı Adı'),
-                ),
-                TextField(decoration: InputDecoration(hintText: 'name',labelText: 'Ad'))
-              ]),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            const CircleAvatar(
+              maxRadius: 50,
+              backgroundImage: NetworkImage(
+                  'https://guardian.ng/wp-content/uploads/2017/10/698669.jpg'),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            InkWell(
+              onTap: () {
+                accountService.updateAvatar();
+              },
+              child: const Text(
+                'Profil Fotoğrafını Değiştir',
+                style: TextStyle(fontSize: 18, color: Colors.blue),
+              ),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            const TextField(
+              decoration: InputDecoration(
+                  hintText: 'Kullanıcı adı', labelText: 'Kullanıcı Adı'),
+            ),
+            const TextField(
+                decoration: InputDecoration(hintText: 'name', labelText: 'Ad'))
+          ]),
         ),
       ),
     );

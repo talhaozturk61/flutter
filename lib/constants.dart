@@ -1,1 +1,2 @@
-const apiUrl = "http://api.iwin.production.cmosteknoloji.com/api";
+const url = "http://dusyeri-instagram.production.cmosteknoloji.com";
+const apiUrl = "http://dusyeri-instagram.production.cmosteknoloji.com/api";

@@ -4,9 +4,6 @@ import 'package:dusyeriinstagram/views/mystory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'dart:math';
 
 import 'discover.dart';
 
@@ -32,10 +29,6 @@ class _NavbarState extends State<Navbar> {
         const MyStory(),
       ];
     }
-
-   
-
-   
 
     List<PersistentBottomNavBarItem> _navBarsItems() {
       return [
@@ -103,8 +96,8 @@ class _NavbarState extends State<Navbar> {
           curve: Curves.ease,
           duration: Duration(milliseconds: 200),
         ),
-        navBarStyle: NavBarStyle
-            .style5, // Choose the nav bar style with this property.
+        navBarStyle:
+            NavBarStyle.style5, // Choose the nav bar style with this property.
       ),
     );
   }

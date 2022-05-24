@@ -1,4 +1,7 @@
+import 'package:dusyeriinstagram/locator.dart';
+import 'package:dusyeriinstagram/services/account.service.dart';
 import 'package:dusyeriinstagram/views/requests.dart';
+import 'package:dusyeriinstagram/views/setprofile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -6,9 +9,6 @@ import 'package:badges/badges.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_stories/flutter_stories.dart';
 import 'dart:io';
-import 'dart:math';
-
-import 'mystory.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -86,6 +86,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final accountService = locator<AccountService>();
     void selectstoryimage() async {
       final List<XFile>? selectedstoryimage =
           await imagePicker.pickMultiImage();
@@ -109,8 +110,10 @@ class _HomePageState extends State<HomePage> {
               )),
           InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RequestsView()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RequestsView()));
             },
             child: Badge(
               position: BadgePosition.topStart(
@@ -133,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                   context: context,
                   builder: (BuildContext context) {
                     return ClipRRect(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(15),
                           topRight: Radius.circular(15)),
                       child: Container(
@@ -148,10 +151,13 @@ class _HomePageState extends State<HomePage> {
                               backgroundColor: Colors.white,
                               elevation: 0.0,
                               leading: InkWell(
-                                onTap: (() {Navigator.pop(context); setState(() {
-                                  _foundUsers.clear();
-                                });; }),
-                                child: Icon(
+                                onTap: (() {
+                                  Navigator.pop(context);
+                                  setState(() {
+                                    _foundUsers.clear();
+                                  });
+                                }),
+                                child: const Icon(
                                   Icons.arrow_back_ios_new,
                                   color: Colors.black,
                                   size: 20,
@@ -192,26 +198,42 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Expanded(
                               child: Scrollbar(
-                                child: _foundUsers !=null 
-                                    ? ListView.builder(physics: BouncingScrollPhysics(),
+                                child: _foundUsers.isEmpty
+                                    ? ListView.builder(
+                                        physics: const BouncingScrollPhysics(),
                                         itemCount: _foundUsers.length,
-                                        itemBuilder: (context, index) => ListTile(
-                                          leading:CircleAvatar(backgroundImage: NetworkImage( 'https://i.pinimg.com/originals/3b/35/88/3b35884ed94f8efd003eafe8f86538b7.jpg'),maxRadius: 26,),
-                                          title: Text(
-                                              _foundUsers[index]['name']),
-                                          subtitle: Text(
-                                              '${_foundUsers[index]["subtitle"].toString()}'),
+                                        itemBuilder: (context, index) =>
+                                            ListTile(
+                                          leading: const CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                'https://i.pinimg.com/originals/3b/35/88/3b35884ed94f8efd003eafe8f86538b7.jpg'),
+                                            maxRadius: 26,
+                                          ),
+                                          title:
+                                              Text(_foundUsers[index]['name']),
+                                          subtitle: Text(_foundUsers[index]
+                                                  ["subtitle"]
+                                              .toString()),
                                         ),
                                       )
-                                    : Column(mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.info,color: Colors.black,size: 24,),SizedBox(height: 10,),
-                                        const Text(
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(
+                                            Icons.info,
+                                            color: Colors.black,
+                                            size: 24,
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
                                             'Sonuç Yok',
                                             style: TextStyle(fontSize: 20),
                                           ),
-                                      ],
-                                    ),
+                                        ],
+                                      ),
                               ),
                             ),
                           ],
@@ -225,7 +247,15 @@ class _HomePageState extends State<HomePage> {
                 Icons.send_sharp,
                 color: Colors.black,
               )),
-          SizedBox(
+          IconButton(
+              onPressed: () {
+                accountService.logout(context);
+              },
+              icon: const Icon(
+                Icons.logout,
+                color: Colors.black,
+              )),
+          const SizedBox(
             width: 5,
           )
         ],
@@ -266,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                   setState(() {});
                 }
 
-                final _momentDuration = const Duration(seconds: 5);
+                const _momentDuration = Duration(seconds: 5);
                 final images = List.generate(
                     imageFileList!.length,
                     (idx) => ListView.builder(
@@ -356,8 +386,8 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.only(bottom: 15),
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 15),
               itemCount: 5,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
@@ -473,6 +503,22 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           )
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          switch (index) {
+            case 1:
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (builder) => const SetProfile()));
+              break;
+          }
+        },
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Ana Sayfa"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profilim"),
         ],
       ),
     );

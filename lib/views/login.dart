@@ -1,7 +1,9 @@
+import 'package:dusyeriinstagram/locator.dart';
+import 'package:dusyeriinstagram/models/login.viewmodel.dart';
+import 'package:dusyeriinstagram/services/account.service.dart';
 import 'package:flutter/material.dart';
 
 import 'homepage.dart';
-import 'navbar.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -11,11 +13,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final loginViewModel =
+      LoginViewModel(userName: 'pazarlama@test.com', password: '!Cmos1234');
+  final accountService = locator<AccountService>();
+  bool failed = false;
+  bool processing = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('SOSYAL',
               style: TextStyle(
@@ -23,55 +33,93 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.black,
                   fontSize: 34,
                   fontFamily: 'BadScript')),
-          Column(
-            children: const [
-              CircleAvatar(
-                radius: 70.0,
-                backgroundImage: NetworkImage(
-                    'https://i.pinimg.com/originals/3b/35/88/3b35884ed94f8efd003eafe8f86538b7.jpg'),
-                backgroundColor: Colors.transparent,
-              ),
-              SizedBox(
-                height: 18,
-              ),
-              Text(
-                'CemOfficial',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: RaisedButton(
-                  color: Colors.blue,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'Giriş Yap',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.login,
-                        color: Colors.white,
-                      )
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Navbar()));
-                  }),
+          const CircleAvatar(
+            child: Icon(
+              Icons.person_outline,
+              size: 140,
+              color: Colors.white,
             ),
-          )
+            backgroundColor: Colors.grey,
+            radius: 90,
+          ),
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    initialValue: loginViewModel.userName,
+                    onChanged: (value) => loginViewModel.userName = value,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'e-posta boş bırakılamaz!';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: loginViewModel.password,
+                    onChanged: (value) => loginViewModel.password = value,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'parola boş bırakılamaz!';
+                      }
+                      return null;
+                    },
+                    obscureText: true,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() {
+                        processing = true;
+                        failed = false;
+                      });
+                      if (_formKey.currentState!.validate()) {
+                        await accountService
+                            .login(loginViewModel)
+                            .then((value) {
+                          setState(() {
+                            processing = false;
+                            failed = !value;
+                          });
+                          if (value) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
+                          }
+                        });
+                      }
+                    },
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Visibility(
+                        child: const Icon(Icons.hourglass_empty),
+                        visible: processing,
+                      ),
+                      const Text('Submit')
+                    ]),
+                  ),
+                  Visibility(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.warning,
+                          color: Colors.red,
+                        ),
+                        Text(
+                          "Geçersiz kullanıcı girişi!",
+                          style: TextStyle(color: Colors.red),
+                        )
+                      ],
+                    ),
+                    visible: failed,
+                  )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

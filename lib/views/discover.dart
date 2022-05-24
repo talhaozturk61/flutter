@@ -13,7 +13,7 @@ class Discover extends StatefulWidget {
 class _DiscoverState extends State<Discover> with TickerProviderStateMixin {
   late TabController _tabController;
 
-  final List <Map<String, dynamic>> myimages = [
+  final List<Map<String, dynamic>> myimages = [
     {
       'image':
           'https://thumbs.dreamstime.com/b/natural-seen-river-side-time-beauty-146637214.jpg',
@@ -95,10 +95,10 @@ class _DiscoverState extends State<Discover> with TickerProviderStateMixin {
   }
 
   bool follow = false;
-  List <Map<String, dynamic>> _foundUsers = [];
+  List<Map<String, dynamic>> _foundUsers = [];
 
   void _runFilter(String enteredKeyword) {
-    List <Map<String, dynamic>> results = [];
+    List<Map<String, dynamic>> results = [];
     if (enteredKeyword.isEmpty) {
       results = myimages;
     } else {
@@ -193,7 +193,7 @@ class _DiscoverState extends State<Discover> with TickerProviderStateMixin {
               mainAxisSpacing: 1,
               crossAxisSpacing: 1,
               itemBuilder: (context, index) {
-                return Container(
+                return SizedBox(
                   child: Image.network(
                     myimages[index]['image'],
                     fit: BoxFit.fill,
@@ -206,7 +206,7 @@ class _DiscoverState extends State<Discover> with TickerProviderStateMixin {
           ),
           _foundUsers.isNotEmpty
               ? Scrollbar(
-                child: ListView.builder(
+                  child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     itemCount: _foundUsers.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -218,7 +218,7 @@ class _DiscoverState extends State<Discover> with TickerProviderStateMixin {
                         ),
                         title: Text(
                           myimages[index]['name'],
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Container(
                           height: 34,
@@ -253,7 +253,7 @@ class _DiscoverState extends State<Discover> with TickerProviderStateMixin {
                                   myimages[index]['isSelected'] == false
                                       ? 'Takip Et'
                                       : 'İstek gönderildi',
-                                  style: TextStyle(fontSize: 10),
+                                  style: const TextStyle(fontSize: 10),
                                 ))
                               ],
                             ),
@@ -262,13 +262,22 @@ class _DiscoverState extends State<Discover> with TickerProviderStateMixin {
                       );
                     },
                   ),
-              )
-              : Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.info,size: 30,color: Colors.black,),SizedBox(height: 10,),
-                  Text('Sonuç bulunamadı '),
-                ],
-              ))
+                )
+              : Center(
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.info,
+                      size: 30,
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Sonuç bulunamadı '),
+                  ],
+                ))
         ],
       ),
     );

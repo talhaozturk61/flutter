@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Follows extends StatefulWidget {
   final String index;
@@ -94,7 +93,8 @@ class _FollowsState extends State<Follows> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.index== 'Takip' ? 0 : 1);
+    _tabController = TabController(
+        length: 2, vsync: this, initialIndex: widget.index == 'Takip' ? 0 : 1);
     _foundUsers = myimages;
   }
 

@@ -151,7 +151,7 @@ class _FavouriteState extends State<Favourite> with TickerProviderStateMixin {
             mainAxisSpacing: 1,
             crossAxisSpacing: 1,
             itemBuilder: (context, index) {
-              return Container(
+              return SizedBox(
                 child: Image.network(
                   myimages[index]['image'],
                   fit: BoxFit.fill,
@@ -173,12 +173,15 @@ class _FavouriteState extends State<Favourite> with TickerProviderStateMixin {
                 title: Text.rich(
                   TextSpan(
                     children: [
-                      
                       TextSpan(
                         text: 'Cemofficial',
-                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      TextSpan(text: '  paylaşımını beğendi..',style: TextStyle(fontSize: 14),),
+                      TextSpan(
+                        text: '  paylaşımını beğendi..',
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ],
                   ),
                 ),

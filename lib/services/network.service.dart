@@ -1,7 +1,7 @@
 import 'package:dusyeriinstagram/constants.dart';
 import 'package:dusyeriinstagram/locator.dart';
 import 'package:dusyeriinstagram/models/api.response.dart';
-import 'package:dusyeriinstagram/services/auth.service.dart';
+import 'package:dusyeriinstagram/services/account.service.dart';
 import 'package:http/http.dart' as http;
 
 class NetworkService {
@@ -36,11 +36,11 @@ class NetworkService {
   }
 
   _getHeaders() {
-    final authService = locator<AuthService>();
+    final accountService = locator<AccountService>();
     var headers = {"content-type": "application/json"};
-    if (authService.isAuthenticated) {
+    if (accountService.isAuthenticated) {
       headers.addAll(
-          {"authorization": 'Bearer ${authService.currentUser?.token}'});
+          {"authorization": 'Bearer ${accountService.currentUser?.token}'});
     }
     return headers;
   }

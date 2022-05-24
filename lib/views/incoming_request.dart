@@ -37,7 +37,8 @@ class _IncomingRequestsState extends State<IncomingRequests> {
       ),
       body: Column(
         children: [
-          Container(margin: EdgeInsets.only(top: 10),
+          Container(
+            margin: const EdgeInsets.only(top: 10),
             width: double.maxFinite,
             child: Row(children: const [
               Spacer(),
@@ -45,7 +46,8 @@ class _IncomingRequestsState extends State<IncomingRequests> {
               SizedBox(
                 width: 10,
               ),
-              Text('Reddet'), SizedBox(
+              Text('Reddet'),
+              SizedBox(
                 width: 10,
               ),
             ]),
