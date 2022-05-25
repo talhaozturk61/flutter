@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'homepage.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,9 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   final loginViewModel =
       LoginViewModel(userName: 'pazarlama@test.com', password: '!Cmos1234');
   final accountService = locator<AccountService>();
-  bool failed = false;
-  bool processing = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,43 +68,38 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: true,
                   ),
                   ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        await accountService
-                            .login(context, loginViewModel)
-                            .then((value) {
-                          if (value!) {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const HomePage()));
-                          }
-                        });
-                      }
-                    },
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Visibility(
-                        child: const Icon(Icons.hourglass_empty),
-                        visible: processing,
-                      ),
-                      const Text('Submit')
-                    ]),
-                  ),
-                  Visibility(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.warning,
-                          color: Colors.red,
-                        ),
-                        Text(
-                          "Geçersiz kullanıcı girişi!",
-                          style: TextStyle(color: Colors.red),
-                        )
-                      ],
-                    ),
-                    visible: failed,
-                  )
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          await accountService
+                              .login(context, loginViewModel)
+                              .then((value) {
+                            if (value!) {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => const HomePage()));
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      Icons.warning,
+                                      color: Colors.red,
+                                    ),
+                                    Text(
+                                      "Geçersiz kullanıcı girişi!",
+                                      style: TextStyle(color: Colors.red),
+                                    )
+                                  ],
+                                ),
+                                backgroundColor: Colors.black,
+                              ));
+                            }
+                          });
+                        }
+                      },
+                      child: const Text('Submit')),
                 ],
               ),
             ),
