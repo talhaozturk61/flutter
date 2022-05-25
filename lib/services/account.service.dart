@@ -21,17 +21,43 @@ class AccountService {
     _user = User.fromJson(json);
   }
 
-  Future<bool> login(LoginViewModel model) async {
+  Future<bool> _login(LoginViewModel model) async {
     final network = locator<NetworkService>();
-    final result = await network.post("account/token", model);
+    final result = await http.post(Uri.parse('$apiUrl/account/token'),
+        headers: network.headers, body: model.toJson());
     if (result.statusCode == 200) {
-      _user = User.fromJson(result.body!);
+      _user = User.fromJson(result.body);
       final prefs = await SharedPreferences.getInstance();
-      prefs.setString('user', result.body!);
+      prefs.setString('user', result.body);
       return true;
     } else {
       return false;
     }
+  }
+
+  Future<bool?> login(BuildContext context, LoginViewModel model) async {
+    return showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (builder) {
+          return AlertDialog(
+            content: FutureBuilder<bool>(
+              future: _login(model),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  Navigator.pop(context, snapshot.data);
+                }
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    CircularProgressIndicator(),
+                    Text("Lütfen bekleyiniz...")
+                  ],
+                );
+              },
+            ),
+          );
+        });
   }
 
   void logout(BuildContext context) async {

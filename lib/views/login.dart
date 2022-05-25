@@ -72,19 +72,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      setState(() {
-                        processing = true;
-                        failed = false;
-                      });
                       if (_formKey.currentState!.validate()) {
                         await accountService
-                            .login(loginViewModel)
+                            .login(context, loginViewModel)
                             .then((value) {
-                          setState(() {
-                            processing = false;
-                            failed = !value;
-                          });
-                          if (value) {
+                          if (value!) {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) => const HomePage()));
