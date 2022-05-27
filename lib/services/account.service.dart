@@ -2,7 +2,9 @@ import 'package:dusyeriinstagram/locator.dart';
 import 'package:dusyeriinstagram/models/login.viewmodel.dart';
 import 'package:dusyeriinstagram/models/user.dart';
 import 'package:dusyeriinstagram/services/network.service.dart';
+import 'package:dusyeriinstagram/views/homepage.dart';
 import 'package:dusyeriinstagram/views/login.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -70,12 +72,15 @@ class AccountService {
               actions: [
                 ElevatedButton(
                     onPressed: (() {
-                      Navigator.pop(context, false);
+                      Navigator.of(context, rootNavigator: true).pop();
                     }),
                     child: const Text("İptal")),
                 ElevatedButton(
                     onPressed: (() {
-                      Navigator.pop(context, true);
+                      /*  Navigator.pop(context, true);*/
+                      Navigator.of(context, rootNavigator: true)
+                          .pushReplacement(MaterialPageRoute(
+                              builder: (context) => LoginPage()));
                     }),
                     child: const Text("Devam")),
               ],
