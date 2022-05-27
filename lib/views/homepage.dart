@@ -247,16 +247,13 @@ class _HomePageState extends State<HomePage> {
                 Icons.send_sharp,
                 color: Colors.black,
               )),
-          IconButton(
-              onPressed: () {
+          InkWell(
+              onTap: () {
                 accountService.logout(context);
               },
-              icon: const Icon(
-                Icons.logout,
-                color: Colors.black,
-              )),
+              child: Icon(Icons.logout,color: Colors.black,)),
           const SizedBox(
-            width: 5,
+            width: 15,
           )
         ],
         backgroundColor: Colors.white,
@@ -419,7 +416,7 @@ class _HomePageState extends State<HomePage> {
                           carouselController: _controller,
                           options: CarouselOptions(
                               viewportFraction: 1.0,
-                              autoPlay: true,
+                              autoPlay: false,
                               onPageChanged: (index, reason) {
                                 setState(() {
                                   _current = index;
@@ -503,22 +500,6 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           )
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          switch (index) {
-            case 1:
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (builder) => const SetProfile()));
-              break;
-          }
-        },
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Ana Sayfa"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profilim"),
         ],
       ),
     );
