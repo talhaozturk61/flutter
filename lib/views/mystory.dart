@@ -2,7 +2,7 @@ import 'package:dusyeriinstagram/views/followers.dart';
 import 'package:dusyeriinstagram/views/posts.dart';
 import 'package:dusyeriinstagram/views/setprofile.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'login.dart';
 
 class MyStory extends StatefulWidget {
@@ -276,6 +276,9 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
               ),
               itemCount: myimages.length,
               itemBuilder: (BuildContext context, int index) {
+                bool _onEditing = true;
+                String _code;
+
                 return InkWell(
                   onTap: () {
                     showDialog(
@@ -283,7 +286,7 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
                         builder: (a) => AlertDialog(
                               title: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children:  [
+                                children: [
                                   const Icon(
                                     Icons.lock,
                                     color: Colors.black,
@@ -293,21 +296,28 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
                                   ),
                                   const Text("Ebeveyn onayı"),
                                   const Spacer(),
-                                  InkWell(onTap: (){  Navigator.of(context, rootNavigator: true).pop();},
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop();
+                                    },
                                     child: const Icon(
                                       Icons.close,
                                       color: Colors.black,
                                     ),
                                   ),
                                 ],
-                              ),content: const Divider(color: Colors.grey,thickness: 1),
+                              ),
+                              content: const Divider(
+                                  color: Colors.grey, thickness: 1),
                               actions: [
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    Container(margin: const EdgeInsets.only(bottom: 15),
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 15),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: Colors.blue,
@@ -321,7 +331,10 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
                                             MainAxisAlignment.center,
                                         children: const [
                                           Icon(Icons.lock_open,
-                                              size: 40, color: Colors.white),SizedBox(height: 10,),
+                                              size: 40, color: Colors.white),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
                                           Text(
                                             "Onayla ",
                                             style: TextStyle(
@@ -331,31 +344,107 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
                                         ],
                                       ),
                                     ),
-                                    InkWell(onTap: (){ showDialog(
-                        context: context,
-                        builder: (a) => AlertDialog(
-                              title: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children:  [
-                               
-                                 
-                                  const Text("Ebeveyn Şifresi"),
-                                  const Spacer(),
-                                  InkWell(onTap: (){  Navigator.of(context, rootNavigator: true).pop();},
-                                    child: const Icon(
-                                      Icons.close,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),content: Text('Aşağıdaki alana ebeveyn şifrenizi giriniz...'),
-                              actions: [
-                      
-                              ],
-                            ));},
-                                      child: Container(margin: const EdgeInsets.only(bottom: 15),
+                                    InkWell(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (a) => AlertDialog(
+                                                  title: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const Text(
+                                                          "Ebeveyn Şifresi"),
+                                                      const Spacer(),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Navigator.of(context,
+                                                                  rootNavigator:
+                                                                      true)
+                                                              .pop();
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.close,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  content: Text(
+                                                      'Aşağıdaki alana ebeveyn şifrenizi giriniz...'),
+                                                  actions: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        VerificationCode(autofocus: true,
+                                                          textStyle: TextStyle(
+                                                              fontSize: 20.0,
+                                                              color: Colors
+                                                                  .red[900]),
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          underlineColor: Colors
+                                                              .grey, // If this is null it will use primaryColor: Colors.red from Theme
+                                                          length: 4,
+                                                          cursorColor: Colors
+                                                              .blue, // If this is null it will default to the ambient
+                                                          // clearAll is NOT required, you can delete it
+                                                          // takes any widget, so you can implement your design
+                                                          clearAll: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(
+                                                              'Temizle',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      14.0,
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .underline,
+                                                                  color: Colors
+                                                                          .blue[
+                                                                      700]),
+                                                            ),
+                                                          ),
+                                                          onCompleted:
+                                                              (String value) {
+                                                            setState(() {
+                                                              _code = value;
+                                                              
+                                                              
+                                                            });
+                                                          },
+                                                          onEditing:
+                                                              (bool value) {
+                                                            setState(() {
+                                                              _onEditing =
+                                                                  value;
+                                                            });
+                                                            if (!_onEditing)
+                                                              FocusScope.of(
+                                                                      context)
+                                                                  .unfocus();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ));
+                                      },
+                                      child: Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 15),
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           color: Colors.blue,
                                         ),
                                         height: 120,
@@ -367,7 +456,10 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
                                               MainAxisAlignment.center,
                                           children: const [
                                             Icon(Icons.lock,
-                                                size: 40, color: Colors.white),SizedBox(height: 10,),
+                                                size: 40, color: Colors.white),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
                                             Text(
                                               "Ebeveyn şifresi",
                                               style: TextStyle(
