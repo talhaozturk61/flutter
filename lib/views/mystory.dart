@@ -1,8 +1,13 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:async';
+
 import 'package:dusyeriinstagram/views/followers.dart';
 import 'package:dusyeriinstagram/views/posts.dart';
 import 'package:dusyeriinstagram/views/setprofile.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class MyStory extends StatefulWidget {
   const MyStory({Key? key}) : super(key: key);
@@ -10,8 +15,6 @@ class MyStory extends StatefulWidget {
   @override
   State<MyStory> createState() => _MyStoryState();
 }
-
-late TabController _tabController;
 
 class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
   List myimages = [
@@ -112,11 +115,28 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
           'https://images.news18.com/ibnlive/uploads/2021/07/1627377451_nature.jpg'
     },
   ];
-  @override
+  late TabController _tabController;
+  TextEditingController textEditingController = TextEditingController();
+  late StreamController<ErrorAnimationType> errorController;
+
   void initState() {
     super.initState();
+    textEditingController = TextEditingController();
+    errorController = StreamController();
     _tabController = TabController(length: 2, vsync: this);
   }
+
+  @override
+  void dispose() {
+    errorController.close();
+
+    super.dispose();
+  }
+
+  bool hasError = false;
+  String currentText = "";
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -275,8 +295,6 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
               ),
               itemCount: myimages.length,
               itemBuilder: (BuildContext context, int index) {
-               
-
                 return InkWell(
                   onTap: () {
                     showDialog(
@@ -357,10 +375,13 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
                                                       const Spacer(),
                                                       InkWell(
                                                         onTap: () {
-                                                          Navigator.of(context,
-                                                                  rootNavigator:
-                                                                      true)
-                                                              .pop();
+                                                          setState(() {
+                                                            Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true)
+                                                                .pop();
+                                                          });
                                                         },
                                                         child: const Icon(
                                                           Icons.close,
@@ -369,20 +390,232 @@ class _MyStoryState extends State<MyStory> with TickerProviderStateMixin {
                                                       ),
                                                     ],
                                                   ),
-                                                  content: Text(
+                                                  content: const Text(
                                                       'Aşağıdaki alana ebeveyn şifrenizi giriniz...'),
                                                   actions: [
-                                                    Row(
+                                                    Form(
+                                                      key: formKey,
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical: 8.0,
+                                                                  horizontal:
+                                                                      30),
+                                                          child:
+                                                              PinCodeTextField(
+                                                            appContext: context,
+                                                            pastedTextStyle:
+                                                                TextStyle(
+                                                              color: Colors
+                                                                  .green
+                                                                  .shade600,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                            length: 4,
+                                                            obscureText: false,
+                                                            obscuringCharacter:
+                                                                '*',
+                                                            animationType:
+                                                                AnimationType
+                                                                    .fade,
+                                                            validator: (v) {
+                                                              if (v!.length <
+                                                                  3) {
+                                                                return "Şifre en az 4 haneli olmalıdır..";
+                                                              } else {
+                                                                return null;
+                                                              }
+                                                            },
+                                                            pinTheme: PinTheme(
+                                                              shape:
+                                                                  PinCodeFieldShape
+                                                                      .box,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              fieldHeight: 60,
+                                                              inactiveFillColor:
+                                                                  Colors.grey[
+                                                                      200],
+                                                              inactiveColor:
+                                                                  Colors.grey[
+                                                                      400],
+                                                              fieldWidth: 50,
+                                                              activeFillColor:
+                                                                  hasError
+                                                                      ? Colors
+                                                                          .orange
+                                                                      : Colors
+                                                                          .white,
+                                                            ),
+                                                            cursorColor:
+                                                                Colors.black,
+                                                            animationDuration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        300),
+                                                            textStyle:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        20,
+                                                                    height:
+                                                                        1.6),
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            enableActiveFill:
+                                                                true,
+                                                            errorAnimationController:
+                                                                errorController,
+                                                            controller:
+                                                                textEditingController,
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            boxShadows: const [
+                                                              BoxShadow(
+                                                                offset: Offset(
+                                                                    0, 1),
+                                                                color: Colors
+                                                                    .black12,
+                                                                blurRadius: 10,
+                                                              )
+                                                            ],
+                                                            onCompleted: (v) {},
+                                                            onChanged: (value) {
+                                                              print(value);
+                                                              setState(() {
+                                                                currentText =
+                                                                    value;
+                                                              });
+                                                            },
+                                                            beforeTextPaste:
+                                                                (text) {
+                                                              return true;
+                                                            },
+                                                          )),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 30.0),
+                                                      child: Text(
+                                                        hasError
+                                                            ? "*Lütfen tüm boşlukları doldurunuz.."
+                                                            : "",
+                                                        style: const TextStyle(
+                                                            color: Colors.red,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 14,
+                                                    ),
+                                                    Container(
+                                                      margin: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 16.0,
+                                                          horizontal: 30),
+                                                      child: ButtonTheme(
+                                                        height: 50,
+                                                        child: FlatButton(
+                                                          onPressed: () {
+                                                            formKey
+                                                                .currentState!
+                                                                .validate();
+
+                                                            if (currentText
+                                                                        .length !=
+                                                                    4 ||
+                                                                currentText !=
+                                                                    "2222") {
+                                                              errorController.add(
+                                                                  ErrorAnimationType
+                                                                      .shake);
+                                                              setState(() {
+                                                                hasError = true;
+                                                              });
+                                                            } else {
+                                                              Navigator.of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .pop();
+                                                            }
+                                                          },
+                                                          child: Center(
+                                                              child: Text(
+                                                            "Onayla"
+                                                                .toUpperCase(),
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )),
+                                                        ),
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.blue,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                color: Colors
+                                                                    .green
+                                                                    .shade200,
+                                                                offset:
+                                                                    const Offset(
+                                                                        1, -2),
+                                                                blurRadius: 5),
+                                                            BoxShadow(
+                                                                color: Colors
+                                                                    .green
+                                                                    .shade200,
+                                                                offset:
+                                                                    const Offset(
+                                                                        -1, 2),
+                                                                blurRadius: 5)
+                                                          ]),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 16,
+                                                    ),
+                                                    /* Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                       
+                                                      children: <Widget>[
+                                                        FlatButton(
+                                                          child: Text("Clear"),
+                                                          onPressed: () {
+                                                            textEditingController
+                                                                .clear();
+                                                          },
+                                                        ),
+                                                       FlatButton(
+                                                          child:
+                                                              Text("Set Text"),
+                                                          onPressed: () {
+                                                            textEditingController
+                                                                    .text =
+                                                                "123456";
+                                                          },
+                                                        ),
                                                       ],
-                                                    ),
+                                                    ),*/
                                                   ],
                                                 ));
                                       },

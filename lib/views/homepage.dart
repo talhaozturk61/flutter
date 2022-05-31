@@ -9,6 +9,7 @@ import 'package:badges/badges.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_stories/flutter_stories.dart';
 import 'dart:io';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -251,7 +252,10 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 accountService.logout(context);
               },
-              child: Icon(Icons.logout,color: Colors.black,)),
+              child: const Icon(
+                Icons.logout,
+                color: Colors.black,
+              )),
           const SizedBox(
             width: 15,
           )
@@ -449,20 +453,23 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              children: const [
-                                SizedBox(
+                              children: [
+                                const SizedBox(
                                   width: 10,
                                 ),
-                                Icon(Icons.favorite_border),
-                                SizedBox(
+                                const Icon(Icons.favorite_border),
+                                const SizedBox(
                                   width: 10,
                                 ),
-                                Icon(Icons.emoji_emotions_outlined),
-                                SizedBox(
+                                InkWell(
+                                    onTap: () {},
+                                    child: const Icon(
+                                        Icons.emoji_emotions_outlined)),
+                                const SizedBox(
                                   width: 10,
                                 ),
-                                Icon(Icons.send),
-                                SizedBox(
+                                const Icon(Icons.send),
+                                const SizedBox(
                                   width: 5,
                                 ),
                               ],
